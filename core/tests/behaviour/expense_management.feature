@@ -26,7 +26,47 @@ Feature: Gestión de gastos
     Then el total de dinero gastado debe ser 15 euros
 
   Scenario: Crear tres gastos diferentes que sumen 30 euros hace que el total sean 30 euros
+    Given un gestor de gastos vacío
+    When añado un gasto de 5 euros llamado Café
+    And añado un gasto de 10 euros llamado Comida
+    And añado un gasto de 15 euros llamado Agua
+    Then el total de dinero gastado debe ser 30 euros
 
   Scenario: Crear tres gastos de 10, 30, 30 euros y elimino el ultimo gasto la suma son 40 euros
+    Given un gestor de gastos vacío
+    When añado un gasto de 10 euros llamado Café
+    And añado un gasto de 30 euros llamado Comida
+    And añado un gasto de 35 euros llamado Agua
+    And elimino el gasto con id 3
+    Then el total de dinero gastado debe ser 40 euros
 
   Scenario: Crear tres gastos de 10, 30, 30 euros y elimino el ultimo gasto la suma son 40 euros
+    Given un gestor de gastos vacío
+    When añado un gasto de 10 euros llamado Café
+    And añado un gasto de 30 euros llamado Comida
+    And añado un gasto de 35 euros llamado Agua
+    And elimino el gasto con id 3
+    Then el total de dinero gastado debe ser 40 euros
+
+  Scenario: Intentar eliminar un gasto que no existe no modifica el total
+    Given un gestor con un gasto de 10 euros
+    When elimino el gasto con id 99
+    Then el total de dinero gastado debe ser 10 euros
+
+  Scenario: Eliminar varios gastos mantiene correctamente el total restante
+    Given un gestor de gastos vacío
+    When añado un gasto de 20 euros llamado Transporte
+    And añado un gasto de 30 euros llamado Supermercado
+    And añado un gasto de 50 euros llamado Libros
+    And elimino el gasto con id 1
+    And elimino el gasto con id 2
+    Then el total de dinero gastado debe ser 50 euros
+
+  Scenario: Eliminar el gasto inicial tras añadir nuevos gastos recalcula correctamente el total
+    Given un gestor con un gasto de 10 euros
+    When añado un gasto de 20 euros llamado Transporte
+    And añado un gasto de 30 euros llamado Supermercado
+    And añado un gasto de 50 euros llamado Libros
+    And elimino el gasto con id 1
+    Then debe haber 3 gastos registrados
+    And el total de dinero gastado debe ser 100 euros
